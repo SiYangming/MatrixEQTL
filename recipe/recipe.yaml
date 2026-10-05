@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+# Version must match Docker tag: 2.4
+context:
+  version: "2.4"
+
+package:
+  name: matrixeqtl
+  version: ${{ version }}
+
+source:
+  url: https://cran.r-project.org/src/contrib/MatrixEQTL_${{ version }}.tar.gz
+  sha256: f7ed1c5a1ade65e2ed75431e36df6fdaf5db70d6c25b09866605abbe8db017c4
+
+build:
+  number: 0
+  noarch: generic
+  script:
+    - $R CMD INSTALL --build .
+    - mkdir -p "${PREFIX}/bin"
+    - install -m 0755 "${RECIPE_DIR}/../scripts/matrixeqtl.R" "${PREFIX}/bin/matrixeqtl"
+
+requirements:
+  host:
+    - r-base >=4.2
+  run:
+    - r-base >=4.2
+    - r-optparse
+    - r-rhpcblasctl
+
+tests:
+  - script:
+      - Rscript -e "stopifnot(packageVersion('MatrixEQTL') >= '2.4')"
+      - test -x "${PREFIX}/bin/matrixeqtl"
+      - matrixeqtl --help | head -n 5
+
+about:
+  homepage: http://www.bios.unc.edu/research/genomic_software/Matrix_eQTL/
+  summary: Matrix eQTL — ultra fast eQTL analysis via large matrix operations
+  description: |
+    Conda packaging of CRAN MatrixEQTL 2.4 plus a CLI wrapper (`matrixeqtl`)
+    for SiYangming/variant2qtl. Cite Shabalin Bioinformatics 2012.
+  license: LGPL-3.0-or-later
+  repository: https://github.com/SiYangming/MatrixEQTL
+
+extra:
+  recipe-maintainers:
+    - SiYangming
