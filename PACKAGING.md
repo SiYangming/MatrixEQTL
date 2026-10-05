@@ -14,10 +14,11 @@ Packaging of [CRAN MatrixEQTL 2.4](https://CRAN.R-project.org/package=MatrixEQTL
 ## Contents
 
 - `upstream/MatrixEQTL_2.4.tar.gz` — CRAN source tarball
-- `upstream/SHA256SUMS` — checksum
+- `upstream/plink2-2.00a5.10-linux-64.tar.bz2` — bioconda plink2 binary (Docker only)
+- `upstream/SHA256SUMS` — checksums
 - `recipe/` — conda-build / rattler-build recipe (noarch)
 - `scripts/matrixeqtl.R` — CLI wrapper installed as `matrixeqtl`
-- `Dockerfile` — linux/amd64 image with MatrixEQTL 2.4, CLI, and `plink2`
+- `Dockerfile` — linux/amd64 image with MatrixEQTL 2.4, CLI, python3, and bioconda `plink2=2.00a5.10`
 
 ## License / attribution
 

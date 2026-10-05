@@ -8,22 +8,22 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://cran.r-project.org/src/contrib/MatrixEQTL_${{ version }}.tar.gz
+  path: ../upstream/MatrixEQTL_${{ version }}.tar.gz
   sha256: f7ed1c5a1ade65e2ed75431e36df6fdaf5db70d6c25b09866605abbe8db017c4
 
 build:
   number: 0
   noarch: generic
   script:
-    - $R CMD INSTALL --build .
+    - R CMD INSTALL --build .
     - mkdir -p "${PREFIX}/bin"
-    - install -m 0755 "${RECIPE_DIR}/../scripts/matrixeqtl.R" "${PREFIX}/bin/matrixeqtl"
+    - install -m 0755 "${RECIPE_DIR}/matrixeqtl.R" "${PREFIX}/bin/matrixeqtl"
 
 requirements:
   host:
-    - r-base >=4.2
+    - r-base >=4.2,<4.5
   run:
-    - r-base >=4.2
+    - r-base >=4.2,<4.5
     - r-optparse
     - r-rhpcblasctl
 

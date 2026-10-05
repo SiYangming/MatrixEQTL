@@ -17,7 +17,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
         wget \
-        unzip \
+        bzip2 \
         python3 \
         zlib1g \
         libgomp1 \
@@ -29,11 +29,12 @@ RUN R -e "install.packages(c('optparse','RhpcBLASctl'), repos='https://cloud.r-p
     && rm -f /tmp/MatrixEQTL_2.4.tar.gz \
     && R -e "stopifnot(packageVersion('MatrixEQTL') >= '2.4')"
 
-ARG PLINK2_URL=https://s3.amazonaws.com/plink2-assets/plink2_linux_avx2_20241114.zip
-RUN wget -q "${PLINK2_URL}" -O /tmp/plink2.zip \
-    && unzip -j /tmp/plink2.zip plink2 -d /usr/local/bin \
-    && chmod +x /usr/local/bin/plink2 \
-    && rm -f /tmp/plink2.zip
+# plink2 2.00a5.10 linux-64 (vendored bioconda binary; same pin as variant2qtl)
+COPY upstream/plink2-2.00a5.10-linux-64.tar.bz2 /tmp/plink2.tar.bz2
+RUN mkdir -p /tmp/plink2 \
+    && tar -xjf /tmp/plink2.tar.bz2 -C /tmp/plink2 \
+    && install -m 0755 /tmp/plink2/bin/plink2 /usr/local/bin/plink2 \
+    && rm -rf /tmp/plink2.tar.bz2 /tmp/plink2
 
 COPY scripts/matrixeqtl.R /usr/local/bin/matrixeqtl
 RUN chmod +x /usr/local/bin/matrixeqtl
